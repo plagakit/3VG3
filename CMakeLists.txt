@@ -1,21 +1,57 @@
-﻿# CMakeList.txt : CMake project for engine, include source and define
-# project specific logic here.
-#
-cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required(VERSION 3.11)
+project("engine")
 
-# Enable Hot Reload for MSVC compilers if supported.
-if (POLICY CMP0141)
-  cmake_policy(SET CMP0141 NEW)
-  set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
+
+# raylib - https://github.com/raysan5/raylib/blob/master/projects/CMake/CMakeLists.txt
+set(RAYLIB_VERSION 5.0)
+find_package(raylib ${RAYLIB_VERSION} QUIET)
+if (NOT raylib_FOUND) # If not found, fetch and build raylib
+  include(FetchContent)
+  FetchContent_Declare(
+    raylib
+    DOWNLOAD_EXTRACT_TIMESTAMP OFF
+    URL https://github.com/raysan5/raylib/archive/refs/tags/${RAYLIB_VERSION}.tar.gz
+  )
+  FetchContent_GetProperties(raylib)
+  if (NOT raylib_POPULATED) # Have we downloaded raylib yet?
+    set(FETCHCONTENT_QUIET NO)
+    FetchContent_Populate(raylib)
+    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE) # don't build the supplied examples
+    add_subdirectory(${raylib_SOURCE_DIR} ${raylib_BINARY_DIR})
+  endif()
 endif()
 
-project ("engine")
-
-# Add source to this project's executable.
-add_executable (engine "engine.cpp" "engine.h")
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET engine PROPERTY CXX_STANDARD 20)
+# raylib-cpp - 
+find_package(raylib_cpp QUIET)
+if (NOT raylib_cpp_FOUND)
+    include(FetchContent)
+    FetchContent_Declare(
+        raylib_cpp
+        GIT_REPOSITORY https://github.com/RobLoach/raylib-cpp.git
+        GIT_TAG v5.0.1
+    )
+    FetchContent_MakeAvailable(raylib_cpp)
 endif()
 
-# TODO: Add tests and install targets if needed.
+
+# MAIN FILES
+add_executable(${PROJECT_NAME})
+add_subdirectory(src)
+target_link_libraries(${PROJECT_NAME} raylib raylib_cpp)
+
+
+# Web Configurations
+if (${PLATFORM} STREQUAL "Web")
+    # Tell Emscripten to build an example.html file.
+    set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
+
+	# Required linker flags for using Raylib with Emscripten
+	target_link_options(${PROJECT_NAME} PRIVATE -sEXPORTED_FUNCTIONS=['_main','_malloc'] -sEXPORTED_RUNTIME_METHODS=ccall -sUSE_GLFW=3)
+endif()
+
+# Raylib MacOS dependencies
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} "-framework IOKit")
+    target_link_libraries(${PROJECT_NAME} "-framework Cocoa")
+    target_link_libraries(${PROJECT_NAME} "-framework OpenGL")
+endif()
