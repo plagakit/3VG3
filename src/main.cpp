@@ -14,6 +14,7 @@ void UpdateDrawFrame(void);
 
 int main()
 {
+	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(screenWidth, screenHeight, "Engine");
 	SetTargetFPS(60);
 
@@ -25,8 +26,6 @@ int main()
 #else
 
 	// Desktop main loop
-	SetTargetFPS(60);
-
 	while (!WindowShouldClose())
 		UpdateDrawFrame();
 #endif

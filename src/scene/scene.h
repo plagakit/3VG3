@@ -6,18 +6,18 @@
 
 struct CollisionInfo {
 	float depth;
-	Vector3 contact;
-	Vector3 normal;
+	RVector3 contact;
+	RVector3 normal;
 };
 
 struct Marker {
-	Vector3 position;
+	RVector3 position;
 	Color color;
 };
 
 struct Arrow {
-	Vector3 position;
-	Vector3 direction;
+	RVector3 position;
+	RVector3 direction;
 	Color color;
 };
 
@@ -34,20 +34,20 @@ private:
 	Camera3D camera;
 	std::vector<RigidBody2D> rigidbodies;
 
-	bool CollidePointLine(Vector3 point, Vector3 lineStart, Vector3 lineEnd, 
-						  Vector3& outClosestPoint);	
+	bool CollidePointLine(RVector3 point, RVector3 lineStart, RVector3 lineEnd,
+		RVector3& outClosestPoint);
 
-	bool CollidePointPolygon(Vector3 point, const std::vector<Vector3>& vertices, Vector3 pointShapeCenter, Vector3 verticesCenter,
+	bool CollidePointPolygon(RVector3 point, const std::vector<RVector3>& vertices, RVector3 pointShapeCenter, Vector3 verticesCenter,
 							 CollisionInfo& outInfo);
 
 	bool CollideSquareSquare(const RigidBody2D& rb1, const RigidBody2D& rb2,
-							 std::vector<CollisionInfo>& outInfos);
+							 CollisionInfo& outInfos);
 
 	// Debug drawing
 	std::vector<Marker> markers;
 	std::vector<Arrow> arrows;
 
-	void AddMarker(Vector3 position, Color color);
-	void AddArrow(Vector3 pos, Vector3 dir, Color color);
+	void AddMarker(RVector3 position, Color color);
+	void AddArrow(RVector3 pos, RVector3 dir, Color color);
 
 };

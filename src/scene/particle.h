@@ -5,8 +5,8 @@
 class Particle {
 
 public:
-	Vector3 position;
-	Vector3 velocity;
+	RVector3 position = RVector3::Zero();
+	RVector3 velocity = RVector3::Zero();
 
 	float inverseMass = 1.0f;
 	float radius = 1.0f;
