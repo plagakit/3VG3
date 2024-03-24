@@ -17,7 +17,7 @@ Things beyond the scope of the course that will probably take me much more time:
 
 ## Building
 
-This project uses CMake, my dastardly arch-nemesis. It's been a tough process learning how
+This project uses CMake, my dastardly archnemesis. It's been a tough process learning how
 to build things with CMake, but worth it in the end because now I don't need to
 include a lot of dependencies in the source (except imgui, womp womp).
 
