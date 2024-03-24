@@ -1,4 +1,6 @@
 ﻿#include "raylib-cpp.hpp"
+#include "imgui.h"
+#include "rlImGui.h"
 
 #ifdef PLATFORM_WEB
 #include <emscripten/emscripten.h>
@@ -17,6 +19,7 @@ int main()
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(screenWidth, screenHeight, "Engine");
 	SetTargetFPS(60);
+	rlImGuiSetup(true);
 
 	scene.Init();
 
@@ -30,6 +33,7 @@ int main()
 		UpdateDrawFrame();
 #endif
 
+	rlImGuiShutdown();
 	CloseWindow();
 	return 0;
 }
@@ -40,6 +44,7 @@ void UpdateDrawFrame(void)
 	scene.Update(GetFrameTime());
 
 	BeginDrawing();
+
 		ClearBackground(BLACK);
 		scene.Render();
 	EndDrawing();

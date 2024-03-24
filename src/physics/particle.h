@@ -10,7 +10,7 @@ public:
 
 	float inverseMass = 1.0f;
 	float radius = 1.0f;
-	float collisionRadius = 1.8f;
+	float boundingRadius = 1.8f;
 
 	bool sleeping = false;
 	bool doGravity = false;

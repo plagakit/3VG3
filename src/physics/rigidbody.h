@@ -10,4 +10,10 @@ public:
 	float angularVelocity = 0.0f;
 	float inverseMOI = 1.0f;
 
+	void SetCubeSideLength(float length)
+	{
+		radius = length / 2;
+		boundingRadius = length * 0.866f;
+	}
+
 };
