@@ -6,9 +6,7 @@
 
 void PhysicsWorld::Init()
 {
-	camera.position = Vector3{ 0, 0, 10 };
-	camera.target = { 0.0f, 0.0f, 0.0f };		// Camera looking at point
-	camera.up = { 0.0f, 1.0f, 0.0f };
+	camera = RCamera3D(RVector3(0, 0, 10));
 	camera.fovy = 45.0f;						// Camera field-of-view Y
 	camera.projection = CAMERA_PERSPECTIVE;		// Camera mode type
 
@@ -260,10 +258,7 @@ void PhysicsWorld::AddArrow(RVector3 pos, RVector3 dir, Color color, float lifet
 
 void PhysicsWorld::Render()
 {
-	
-	
-
-	BeginMode3D(camera);
+	camera.BeginMode();
 
 	for (auto& body : rigidbodies)
 	{
@@ -272,7 +267,8 @@ void PhysicsWorld::Render()
 		rlRotatef(body.rotation * RAD2DEG, 0, 0, 1); // rlRotatef ASSUMES ITS IN DEGREES UGHHHHHHHHHHHHHH
 
 		Color c = body.color; c.a = 70;
-		DrawSphereWires(Vector3{}, body.boundingRadius, 8, 8, c);
+		if (drawBoundingSpheres)
+			DrawSphereWires(Vector3{}, body.boundingRadius, 8, 8, c);
 		DrawCubeWires(Vector3{}, body.radius * 2, body.radius * 2, body.radius * 2, body.color);
 
 		rlPopMatrix();
@@ -288,8 +284,6 @@ void PhysicsWorld::Render()
 		DrawSphere(end, 0.05f, arrow.marker.color);
 	}
 		
-
-	EndMode3D();
-	DrawFPS(10, 10);
+	camera.EndMode();
 }
 

@@ -32,7 +32,7 @@ public:
 //private: TODO: add protection
 	float cRestitution = 0.2f;
 
-	Camera3D camera;
+	RCamera3D camera;
 	std::vector<RigidBody2D> rigidbodies;
 
 	bool CollidePointLine(RVector3 point, RVector3 lineStart, RVector3 lineEnd,
@@ -45,10 +45,14 @@ public:
 							 CollisionInfo& outInfos);
 
 	// Debug drawing
+	// TODO: move debug drawing out of physics code
+	bool drawBoundingSpheres = true;
+
 	std::vector<Marker> markers;
 	std::vector<Arrow> arrows;
 
 	void AddMarker(RVector3 position, Color color, float lifetime = 1.0f);
 	void AddArrow(RVector3 pos, RVector3 dir, Color color, float lifetime = 1.0f);
+
 
 };

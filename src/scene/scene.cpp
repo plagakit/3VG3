@@ -2,6 +2,7 @@
 
 #include "imgui.h"
 #include "rlImGui.h"
+#include <iostream>
 
 void Scene::Init()
 {
@@ -48,13 +49,16 @@ void Scene::DrawGUI()
 {
 	//ImGui::ShowDemoWindow();
 
-	static const ImGuiWindowFlags WINDOW_FLAGS = ImGuiWindowFlags_None;
-
 	const ImGuiViewport* viewport = ImGui::GetMainViewport();
+	static const ImGuiWindowFlags WINDOW_FLAGS = ImGuiWindowFlags_None
+		| ImGuiWindowFlags_NoResize;
+
+	DrawFPS(viewport->Size.x - 90, 10);
+
 	ImVec2 settingsSize = ImVec2(viewport->Size.x / 5, viewport->Size.y / 2);
 	ImGui::SetNextWindowPos(ImVec2(10, 10));
-	//ImGui::SetNextWindowSize(settingsSize);
-	ImGui::Begin("Settings");
+	ImGui::SetNextWindowSize(ImVec2(0, 0)); // size 0 will make the window autofit conte
+	ImGui::Begin("Settings", NULL, WINDOW_FLAGS);
 
 	// Scenario
 	ImGui::Text("Scenario: %d", currentScenario);
@@ -68,6 +72,31 @@ void Scene::DrawGUI()
 		if (ImGui::Button("-"))
 			SetScenario(currentScenario - 1);
 	if (canDecrementScenario) ImGui::EndDisabled();
+
+	// Camera
+	ImGui::Checkbox("Turn on orthographic camera", &isCameraOrthographic);
+	physicsWorld->camera.projection = isCameraOrthographic ? CAMERA_ORTHOGRAPHIC : CAMERA_PERSPECTIVE;
+	ImGui::PushItemWidth(150);
+	if (isCameraOrthographic)
+	{
+		physicsWorld->camera.fovy = orthographicNearWidth;
+		ImGui::DragFloat("Camera Width", &orthographicNearWidth, 1.0f, 0, 100, "%.1f");
+	} 
+	else 
+	{
+		physicsWorld->camera.fovy = perspectiveFOV;
+		ImGui::DragFloat("Camera FOV", &perspectiveFOV, 1.0f, 5.0f, 90.0f, "%.0f");
+	}
+	ImGui::DragFloat3("Camera Position", cameraPos, 0.01f, -FLT_MAX, FLT_MAX, "%.2f");
+	RVector3 cameraVecPos = RVector3(cameraPos[0], cameraPos[1], cameraPos[2]);
+	physicsWorld->camera.SetPosition(cameraVecPos);
+	physicsWorld->camera.SetTarget(cameraVecPos + cameraLookAtOffset);
+
+	// Other settings
+	ImGui::Checkbox("Draw bounding spheres", &physicsWorld->drawBoundingSpheres);
+
+	ImGui::PushItemWidth(70);
+	ImGui::InputFloat("Coefficient of restitution", &physicsWorld->cRestitution);
 
 	// Rigidbodies
 	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
@@ -85,6 +114,7 @@ void Scene::DrawGUI()
 
 			if (node_open)
 			{
+
 				ImGui::TreePop();
 			}
 			ImGui::PopID();
@@ -101,9 +131,12 @@ void Scene::DrawGUI()
 
 void Scene::SetScenario(int scenario)
 {
-	currentScenario = scenario;
+	// Reset & update physics world settings
 	physicsWorld->Init();
+	physicsWorld->camera.projection = isCameraOrthographic ? CAMERA_ORTHOGRAPHIC : CAMERA_PERSPECTIVE;
 
+	// Add current scenario
+	currentScenario = scenario;
 	if (currentScenario == 0)
 	{
 		RigidBody2D rb1 = RigidBody2D();
@@ -125,7 +158,7 @@ void Scene::SetScenario(int scenario)
 	{
 		float invMasses[] = { 1, 1.0f / 10, 0 };
 		float radii[] = { 1, 10, 100 };
-		float xPoses[] = { -11, 0, 120 };
+		float xPoses[] = { -20, 0, 120 };
 		float xVels[] = { 10, 10, 0 };
 
 		for (int i = 0; i < 3; i++)
@@ -135,8 +168,10 @@ void Scene::SetScenario(int scenario)
 			rb.velocity = RVector3(xVels[i], 0, 0);
 			rb.inverseMass = invMasses[i];
 			rb.radius = radii[i];
+			rb.boundingRadius = rb.radius * 1.8f;
 			physicsWorld->rigidbodies.push_back(rb);
 		}
+		physicsWorld->rigidbodies[1].rotation = PI / 4;
 	}
 	if (currentScenario == 2)
 	{
@@ -154,4 +189,10 @@ void Scene::SetScenario(int scenario)
 		physicsWorld->rigidbodies.push_back(r1);
 		physicsWorld->rigidbodies.push_back(r2);
 	}
+
+	// Reset scene settings that are dependant on scenario
+	cameraPos[0] = physicsWorld->camera.position.x;
+	cameraPos[1] = physicsWorld->camera.position.y;
+	cameraPos[2] = physicsWorld->camera.position.z;
+	cameraLookAtOffset =  RVector3(physicsWorld->camera.target) - RVector3(physicsWorld->camera.position);
 }

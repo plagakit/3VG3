@@ -44,7 +44,6 @@ void UpdateDrawFrame(void)
 	scene.Update(GetFrameTime());
 
 	BeginDrawing();
-
 		ClearBackground(BLACK);
 		scene.Render();
 	EndDrawing();
