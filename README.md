@@ -32,8 +32,8 @@ To build for desktop, run:
 mkdir bin
 cd bin
 cmake ..
+cmake --build build
 ```
-And then build the project with your desktop's build system.
 
 To build for web using emscripten, run: (make sure CMake version is 3.13 or greater)
 ```
