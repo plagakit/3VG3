@@ -6,9 +6,10 @@
 
 void Scene::Init()
 {
-	const char* fontPath = "resources/Segoe-UI-Variable.ttf";
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = NULL;
+
+	const char* fontPath = "resources/Segoe-UI-Variable.ttf";
 	font = io.Fonts->AddFontFromFileTTF(fontPath, 22.0f);
 	fontMedium = io.Fonts->AddFontFromFileTTF(fontPath, 28.0f);
 	fontBig = io.Fonts->AddFontFromFileTTF(fontPath, 32.0f);
@@ -140,14 +141,14 @@ void Scene::SetScenario(int scenario)
 	if (currentScenario == 0)
 	{
 		RigidBody2D rb1 = RigidBody2D();
-		rb1.position = { -3, 0.3f, 0 };
-		rb1.velocity = Vector3{ 1, 0, 0 };
+		rb1.position = RVector3(- 3, 0.3f, 0);
+		rb1.velocity = RVector3(1, 0, 0);
 		rb1.angularVelocity = PI * 0.25f;
 		rb1.color = BLUE;
 
 		RigidBody2D rb2 = RigidBody2D();
-		rb2.position = { 3, -0.1f, 0 };
-		rb2.velocity = Vector3{ -1, 0, 0 };
+		rb2.position = RVector3(3, -0.1f, 0);
+		rb2.velocity = RVector3(-1, 0, 0 );
 		rb2.rotation = PI / 4;
 		rb2.color = RED;
 
@@ -177,12 +178,12 @@ void Scene::SetScenario(int scenario)
 	{
 		RigidBody2D r1, r2;
 		r1.color = RColor::Blue();
-		r1.position = { 0.5f, 0.5f, 3 };
+		r1.position = RVector3(0.5f, 0.5f, 3);
 		r1.SetCubeSideLength(0.6f);
 		r1.doGravity = true;
 
 		r2.color = RColor::Red();
-		r2.position = { 0.2f, -2, 3 };
+		r2.position = RVector3(0.2f, -2, 3);
 		r2.inverseMass = 0.0f;
 		r2.inverseMOI = 0.0f;
 

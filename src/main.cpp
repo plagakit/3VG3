@@ -16,6 +16,12 @@ void UpdateDrawFrame(void);
 
 int main()
 {
+	// Disable raylib warnings (GetWindowScaleDPI is warned every frame on web)
+#ifdef PLATFORM_WEB
+	SetTraceLogLevel(LOG_ERROR);
+#endif
+
+	// Create window
 	SetConfigFlags(FLAG_VSYNC_HINT);
 	InitWindow(screenWidth, screenHeight, "Engine");
 	SetTargetFPS(60);
@@ -23,11 +29,11 @@ int main()
 
 	scene.Init();
 
-#ifdef PLATFORM_WEB
 	// Web main loop
+#ifdef PLATFORM_WEB
+	
 	emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 #else
-
 	// Desktop main loop
 	while (!WindowShouldClose())
 		UpdateDrawFrame();

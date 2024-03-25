@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.11)
+﻿cmake_minimum_required(VERSION 3.13)
 project("3VG3")
 
 
@@ -67,7 +67,8 @@ if (${PLATFORM} STREQUAL "Web" OR WEB_PRESET)
     set_target_properties(${PROJECT_NAME} PROPERTIES SUFFIX ".html")
 
 	# Required linker flags for using Raylib with Emscripten
-	target_link_options(${PROJECT_NAME} PRIVATE -sEXPORTED_FUNCTIONS=['_main','_malloc'] -sEXPORTED_RUNTIME_METHODS=ccall -sUSE_GLFW=3)
+	target_link_options(${PROJECT_NAME} PRIVATE -sEXPORTED_FUNCTIONS=['_main','_malloc'] -sEXPORTED_RUNTIME_METHODS=ccall -sUSE_GLFW=3 --preload-file ${RESOURCES_DIR})
+	#target_compile_options(${PROJECT_NAME} PRIVATE -Os)
 endif()
 
 # Raylib MacOS dependencies

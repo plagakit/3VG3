@@ -35,5 +35,10 @@ cmake ..
 ```
 And then build the project with your desktop's build system.
 
-To build for web using emscripten, you have to, uh, give me a minute while I figure it out...
-
+To build for web using emscripten, run: (make sure CMake version is 3.13 or greater)
+```
+mkdir bin
+cd bin
+cmake -S .. -B build -G Ninja -DPLATFORM=Web "-DCMAKE_TOOLCHAIN_FILE=<YOUR EMSCRIPTEN PATH>/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+cmake --build build
+```
