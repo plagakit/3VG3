@@ -100,30 +100,45 @@ void Scene::DrawGUI()
 	ImGui::InputFloat("Coefficient of restitution", &physicsWorld->cRestitution);
 
 	// Rigidbodies
-	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(2, 2));
-	if (ImGui::BeginTable("split", 2, ImGuiTableFlags_BordersOuter | ImGuiTableFlags_Resizable))
+	ImGui::Unindent(ImGui::GetTreeNodeToLabelSpacing());
+	if (ImGui::TreeNode("Rigidbodies"))
 	{
 		for (int rbIdx = 0; rbIdx < physicsWorld->rigidbodies.size(); rbIdx++)
 		{
-			RigidBody2D& rb = physicsWorld->rigidbodies[rbIdx];
-			ImGui::PushID(rbIdx);
-
-			ImGui::TableNextRow();
-			ImGui::TableSetColumnIndex(0);
-			bool node_open = ImGui::TreeNode("RigidBody", "Body %u", rbIdx);
-			ImGui::TableSetColumnIndex(1);
-
-			if (node_open)
+			if (ImGui::TreeNode((void*)(intptr_t)rbIdx, "Body %d", rbIdx))
 			{
+				RigidBody2D& rb = physicsWorld->rigidbodies[rbIdx];
+
+				if (abs(rb.inverseMass) < 1e-8f) 
+					ImGui::Text("Mass: INF");
+				else ImGui::Text("Mass: %.3f", 1 / rb.inverseMass);
+				
+				if (abs(rb.inverseMOI) < 1e-8f)	
+					ImGui::Text("Moment of inertia: INF");
+				else ImGui::Text("Moment of inertia: %.3f", 1 / rb.inverseMOI);
+
+				ImGui::Text("Position: (%.03f, %.03f, %.03f)", rb.position.x, rb.position.y, rb.position.z);
+				ImGui::Text("Velocity: (%.03f, %.03f, %.03f)", rb.velocity.x, rb.velocity.y, rb.velocity.z);
+				ImGui::Text("External force: (%.03f, %.03f, %.03f)", rb.force.x, rb.force.y, rb.force.z);
+				ImGui::Text("Rotation: %.03f rad", rb.rotation);
+				ImGui::Text("Angular velocity: %.03f rad/s", rb.angularVelocity);
+
+				ImGui::Checkbox("Do gravity", &rb.doGravity);
+
+				//float color[4] = { rb.color.r, rb.color.g, rb.color.b, rb.color.a };
+				//ImGui::ColorEdit4("Color", (float*)&color, ImGuiColorEditFlags_DisplayHSV | ImGuiColorEditFlags_Uint8);
+				//rb.color = {
+				//	(unsigned char)color[0],
+				//	(unsigned char)color[1],
+				//	(unsigned char)color[2],
+				//	(unsigned char)color[3]
+				//};
 
 				ImGui::TreePop();
 			}
-			ImGui::PopID();
 		}
-		ImGui::EndTable();
+		ImGui::TreePop();
 	}
-	ImGui::PopStyleVar();
-
 
 
 	ImGui::End();
