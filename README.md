@@ -1,9 +1,9 @@
 # 3VG3 Physics Engine
 
 A physics engine based on my coursework in DATASCI 3VG3 at McMaster University. 
-The course goes over 2D dynamics, collisions, friction, constraints, and more all in Python,
-I translated everything over to C++ (using Raylib for rendering) with my own engine additions 
-beyond the scope of the course.
+The course goes over 2D dynamics, collisions, friction, constraints, and more. The course is
+normally all in Python, but I translated all the concepts and code over to C++ (using Raylib
+for rendering) with, hopefully soon, my own engine additions beyond the scope of the course.
 
 ### TODO
 - Friction
@@ -17,9 +17,9 @@ Things beyond the scope of the course that will probably take me much more time:
 
 ## Building
 
-This project uses CMake, my dastardly arch-nemesis. It's been a tough process learning how
-to build things with CMake, but in the end it's really useful because now I don't need to
-include a lot of dependencies in the source (except imgui).
+This project uses CMake, my dastardly archnemesis. It's been a tough process learning how
+to build things with CMake, but worth it in the end because now I don't need to
+include a lot of dependencies in the source (except imgui, womp womp).
 
 First, clone the repository:
 ```
