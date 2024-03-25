@@ -42,6 +42,6 @@ To build for web using emscripten, run: (make sure CMake version is 3.13 or grea
 ```
 mkdir bin
 cd bin
-cmake -S .. -B build -G Ninja -DPLATFORM=Web "-DCMAKE_TOOLCHAIN_FILE=<YOUR EMSCRIPTEN PATH>/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
-cmake --build build
+cmake -S .. -B web -G Ninja -DPLATFORM=Web "-DCMAKE_TOOLCHAIN_FILE=<YOUR EMSCRIPTEN PATH>/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+cmake --build web
 ```
