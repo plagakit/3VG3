@@ -13,6 +13,9 @@ for rendering) with, hopefully soon, my own engine additions beyond the scope of
 Things beyond the scope of the course that will probably take me much more time:
 - 3D (oh boy)
 - Different collider types (OBB, sphere, convex hull, etc.)
+- Queries & triggers
+- Raycasting
+- Continuous collision detection for fast objects
 
 
 ## Building
