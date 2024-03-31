@@ -16,6 +16,7 @@ Things beyond the scope of the course that will probably take me much more time:
 - Queries & triggers
 - Raycasting
 - Continuous collision detection for fast objects
+- Decouple all math & physics from raylib and allow compilation as a library (oh boy pt. 2)
 
 
 ## Building
